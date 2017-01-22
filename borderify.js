@@ -8,17 +8,7 @@ for (var i = 0; i < articles.length; i++) {
     
     var bAdd = document.createElement("div");
     
-    //bAdd.innerHTML = i;
-    bAdd.style.cssText = `position: absolute;
-                          bottom: 5px;
-                          right: 5px;
-                          z-index: 100;
-                          height: 14px;
-                          width: 14px;
-                          background-color: #cccccc;
-                          border-radius: 7px;
-                          cursor: pointer;`;
-    bAdd.classList.add("floatButton");
+    bAdd.classList.add("add_to_quick_list ");
     
     var home = undefined;
     var el = articles[i];//?????
