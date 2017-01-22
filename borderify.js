@@ -8,7 +8,7 @@ for (var i = 0; i < articles.length; i++) {
     
     var bAdd = document.createElement("div");
     
-    bAdd.classList.add("add_to_quick_list ");
+    bAdd.classList.add("add_to_quick_list");
     
     var home = undefined;
     var el = articles[i];//?????
@@ -96,9 +96,45 @@ displayFloatButton();
 function displayFloatButton() {
     
     var gettingAllStorageItems = browser.storage.local.get();
+
+    gettingAllStorageItems.then((res) => {
+        
+        res = res[0];
+        
+        var floatButton = document.body.querySelector("#float_button");
+        
+        var count = Object.keys(res).length;
+        var floatButtonTitle = Object.keys(res)[Object.keys(res).length - 1];
+        var floatButtonHref = res[floatButtonTitle];
+        
+        if (count == 0) {
+            
+        } else if (count == 1 || !floatButton) {
+            floatButton = document.createElement("div");
+            floatButton.id = "float_button";
+            
+            var alias = document.createElement('a');
+            
+            alias.textContent = floatButtonTitle;
+            alias.href = floatButtonHref;
+            
+            document.body.appendChild(floatButton);
+            floatButton.appendChild(alias);
+        } else {
+            var alias = document.createElement('a');
+            
+            alias.textContent = floatButtonTitle;
+            alias.href = floatButtonHref;
+            
+            floatButton.replaceChild(alias, floatButton.firstChild);
+        }
+    });
+    
+/*
+    var gettingAllStorageItems = browser.storage.local.get();
             
     gettingAllStorageItems.then((res) => {
-        /*WTF*/
+        //WTF
         res = res[0];
         var isnt = Object.keys(res).length;
         var floatButton;
@@ -134,6 +170,7 @@ function displayFloatButton() {
                 //}
         }
     }, onError);
+*/
 }
 
 function addToList(title, href) {
