@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": ["*://shazoo.ru/*"],
-      "js": ["borderify.js"]
+      "js": ["borderify.js"],
+      "css": ["botderify.css"]
     }
   ]
 
