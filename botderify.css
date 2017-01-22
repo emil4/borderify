@@ -1,17 +1,16 @@
 #float_button {
     position: fixed;
-    top: 0px;
+    top: 100px;
     right: 0px;
-    background-color: aqua;
+    padding: 8px;
+    background-color: #eee;
     border-style: solid;
-    border-left-color: #bbbbbb;
-    border-left-width: 5px;
+    border-left-color: aqua;
+    border-left-width: 2px;
     border-right-width: 0px;
     border-top-width: 0px;
     border-bottom-width: 0px;
     z-index: 999;
-    
-    
 }
 
 .add_to_quick_list {
@@ -25,3 +24,4 @@
     border-radius: 7px;
     cursor: pointer;
 }
+
