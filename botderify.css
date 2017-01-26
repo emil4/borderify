@@ -11,6 +11,7 @@
     border-top-width: 0px;
     border-bottom-width: 0px;
     z-index: 999;
+    cursor: pointer;
 }
 
 .add_to_quick_list {
@@ -25,3 +26,28 @@
     cursor: pointer;
 }
 
+.add_to_quick_list:hover {
+    background-color: #56ADC9;
+}
+
+.in_list {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    z-index: 100;
+    height: 8px;
+    width: 8px;
+    background-color: aquamarine;
+    border-radius: 4px;
+}
+
+.clear {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 35px;
+    width: 35px;
+    z-index: 10000;
+    cursor: pointer;
+    border-bottom-left-radius: 14px;
+}
