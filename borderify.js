@@ -1,83 +1,111 @@
-//отбираем все ссылки на статьи в переменую articles
-
-browser.storage.local.clear();//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*кнопка очистки хранилища
+var clear = document.createElement('div');
+clear.className = 'clear';
+clear.style.backgroundColor = "#"+((1<<24)*Math.random()|0).toString(16);
+document.body.appendChild(clear);
+clear.addEventListener('click', (e) => {
+    browser.storage.local.clear();
+    displayFloatButton();
+});
+*/
 
 var articles = document.body.getElementsByTagName("article");
 
-for (var i = 0; i < articles.length; i++) {
-    
-    var bAdd = document.createElement("div");
-    
-    bAdd.classList.add("add_to_quick_list");
-    
-    var home = undefined;
-    var el = articles[i];//?????
+//console.log(articles);
 
-    while (home == undefined) {
-        if (el.parentNode.classList.contains("latestEntries")) { //left main list
-            home = "latestEntries";
-        } else if (el.parentNode.classList.contains("pickedEntries")) { //center main part of page
-            home = "pickedEntries";
-        } else if (el.parentNode.classList.contains("pickedEntriesBottom")  && el.parentNode) { //bottom list
-            home = "pickedEntriesBottom";
-        }
-
-        el = el.parentNode;
-    }
-
-    switch (home) {
-        case "latestEntries":
-            bAdd.dataset.href = articles[i].querySelector(".desktop .entryTitle a").href;
-            bAdd.dataset.title = articles[i].querySelector(".desktop .entryTitle a").innerHTML;
-            break;
-        case "pickedEntries":
-            bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
-            bAdd.dataset.title = articles[i].querySelector("h2.entryTitle").innerHTML;
-            break;
-        case "pickedEntriesBottom":
-            bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
-            bAdd.dataset.title = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');
-            break;
-    }
+function addToList(event) {
+    var title = event.target.dataset.title;
+    var href = event.target.dataset.href;
     
-    bAdd.dataset.homeType = home;
-       
-    articles[i].addEventListener("click", (event) => {
-        var title = event.target.dataset.title;
-        var href = event.target.dataset.href;
+    event.target.className = "in_list";
+
+    //var h = browser.storage.local.get(title);
+    
+    console.log(event);
+    
+    browser.storage.local.set({[title]: href});
+}
+
+
+if (articles.length > 1) {
+    for (var i = 0; i < articles.length; i++) {
         
-        var h = browser.storage.local.get(title);
-        h.then((res) => {
-            res = res[0];
-            console.log(href == res[title]);
-            if (href == res[title]) {
-                
-                event.target.style.backgroundColor = "#55ccbb";
-                
-                bAdd.onmouseover = function(event) {                //REMOVE THIS
-                    //event.target.style.backgroundColor = "#56ADC9";
-                }
-                bAdd.onmouseout = function(event) {                //AND THIS
-                    //event.target.style.backgroundColor = "#CCCCCC";
-                }
-            } else {
-                addToList(title, href);//browser.storage.local.set({[title]: href});
-            }
+        var bAdd = document.createElement("div");
+        var left = undefined;
+        var cent = undefined;
+        var bott = undefined;
+        var lefth = undefined;
+        var centh = undefined;
+        var botth = undefined;
+
+        bAdd.classList.add("add_to_quick_list");
+        
+        bAdd.dataset.i = i;
+        
+        try {
+            left = articles[i].querySelector(".desktop .entryTitle a").innerHTML;//left main list
+            lefth = articles[i].querySelector(".desktop .entryTitle a").href;
+        } catch (e) {}
+        
+        try {
+            cent = articles[i].querySelector("h2.entryTitle").innerHTML;//center main part of page
+            centh = articles[i].querySelector("a.overlayLink").href;
+        } catch (e) {}
+        
+        try {
+            bott = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');//bottom list
+            botth = articles[i].querySelector("a.overlayLink").href;
+        } catch (e) {}
+        
+        bAdd.dataset.title = left || cent || bott;
+        bAdd.dataset.href = lefth || centh || botth;
+        
+        bAdd.addEventListener("click", (event) => {
+            var title = event.target.dataset.title;
+            var href = event.target.dataset.href;
+
+            //event.target.className = "in_list";
+            browser.storage.local.set({[title]: href});
+            
+            displayFloatButton();
         });
         
-    
-        displayFloatButton();
-    });
-    
-    bAdd.onmouseover = function(event) {                //REMOVE THIS
-        event.target.style.backgroundColor = "#56ADC9";
-    }
-    
-    bAdd.onmouseout = function(event) {                //AND THIS
-        event.target.style.backgroundColor = "#CCCCCC";
-    }
+/*ON DELETE
+        var home = undefined;
+        var el = articles[i];//?????
+
+        while (home == undefined) {
+            if (el.parentNode.classList.contains("latestEntries")) { //left main list
+                home = "latestEntries";
+            } else if (el.parentNode.classList.contains("pickedEntries")) { //center main part of page
+                home = "pickedEntries";
+            } else if (el.parentNode.classList.contains("pickedEntriesBottom")  && el.parentNode) { //bottom list
+                home = "pickedEntriesBottom";
+            }
+
+            el = el.parentNode;
+        }
+
+        switch (home) {
+            case "latestEntries":
+                bAdd.dataset.href = articles[i].querySelector(".desktop .entryTitle a").href;
+                bAdd.dataset.title = articles[i].querySelector(".desktop .entryTitle a").innerHTML;
+                break;
+            case "pickedEntries":
+                bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
+                bAdd.dataset.title = articles[i].querySelector("h2.entryTitle").innerHTML;
+                break;
+            case "pickedEntriesBottom":
+                bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
+                bAdd.dataset.title = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');
+                break;
+        }
+
+        bAdd.dataset.homeType = home;
+!!!!!*/
         
-    articles[i].appendChild(bAdd);
+        articles[i].appendChild(bAdd);
+    }
 }
 
 function onError(error) {
@@ -93,6 +121,8 @@ function onError(error) {
 
 displayFloatButton();
 
+var del;
+
 function displayFloatButton() {
     
     var gettingAllStorageItems = browser.storage.local.get();
@@ -107,9 +137,12 @@ function displayFloatButton() {
         var floatButtonTitle = Object.keys(res)[Object.keys(res).length - 1];
         var floatButtonHref = res[floatButtonTitle];
         
-        if (count == 0) {
+        //console.log(res);
+        
+        if (count == 0) {//если в хранилище пусто, то ничего не делать
             
-        } else if (count == 1 || !floatButton) {
+        } else if (!floatButton) {//если в хранилище что-то есть, но нет плавающей кнопки
+            
             floatButton = document.createElement("div");
             floatButton.id = "float_button";
             
@@ -120,59 +153,24 @@ function displayFloatButton() {
             
             document.body.appendChild(floatButton);
             floatButton.appendChild(alias);
-        } else {
+            
+            floatButton.addEventListener('click', (e) => {
+                //console.log(e.target.innerHTML);
+                //e.preventDefault();
+                browser.storage.local.remove(e.target.innerHTML);
+            });
+            
+        } else  if (floatButton) {//если в хранилище что-то есть, и есть плавающая кнопка
+            
             var alias = document.createElement('a');
             
             alias.textContent = floatButtonTitle;
             alias.href = floatButtonHref;
             
             floatButton.replaceChild(alias, floatButton.firstChild);
-        }
-    });
-    
-/*
-    var gettingAllStorageItems = browser.storage.local.get();
             
-    gettingAllStorageItems.then((res) => {
-        //WTF
-        res = res[0];
-        var isnt = Object.keys(res).length;
-        var floatButton;
-        
-        var floatButtonTitle = Object.keys(res)[Object.keys(res).length - 1];
-        var floatButtonHref = res[floatButtonTitle];
-        
-        switch (isnt) {
-            case 0:
-                break;
-            case 1:
-                floatButton = document.createElement("div");
-                floatButton.classList.add("boxQuickList");
-                floatButton.style.cssText = `position: fixed;
-                                            top: 100px;
-                                            right: 0px;
-                                            padding: 8px;
-                                            background-color: #eee;
-                                            border-style: solid;
-                                            border-left-color: aqua;
-                                            border-left-width: 2px;
-                                            border-right-width: 0px;
-                                            border-top-width: 0px;
-                                            border-bottom-width: 0px;
-                                            z-index: 999;`;
-                document.body.appendChild(floatButton);
-                floatButton.innerHTML = `<a href = ${floatButtonHref}>${floatButtonTitle}<a>`;
-                break;
-            default:
-                //if (res[floatButtonTitle] == floatButtonHref) {
-                    floatButton = document.querySelector(".boxQuickList");
-                    floatButton.innerHTML = `<a href = ${floatButtonHref}>${floatButtonTitle}<a>`;
-                //}
         }
-    }, onError);
-*/
-}
-
-function addToList(title, href) {
-    browser.storage.local.set({[title]: href});
+        
+        console.log(res);
+    });
 }
