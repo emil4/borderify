@@ -9,7 +9,6 @@ clear.addEventListener('click', (e) => {
 });
 */
 
-var articles = document.body.getElementsByTagName("article");
 
 //console.log(articles);
 
@@ -21,90 +20,100 @@ function addToList(event) {
 
     //var h = browser.storage.local.get(title);
     
-    console.log(event);
+    //console.log(event);
     
     browser.storage.local.set({[title]: href});
 }
 
+var articles = document.body.getElementsByTagName("article");
+updatePage(articles);
 
-if (articles.length > 1) {
-    for (var i = 0; i < articles.length; i++) {
-        
-        var bAdd = document.createElement("div");
-        var left = undefined;
-        var cent = undefined;
-        var bott = undefined;
-        var lefth = undefined;
-        var centh = undefined;
-        var botth = undefined;
-
-        bAdd.classList.add("add_to_quick_list");
-        
-        bAdd.dataset.i = i;
-        
-        try {
-            left = articles[i].querySelector(".desktop .entryTitle a").innerHTML;//left main list
-            lefth = articles[i].querySelector(".desktop .entryTitle a").href;
-        } catch (e) {}
-        
-        try {
-            cent = articles[i].querySelector("h2.entryTitle").innerHTML;//center main part of page
-            centh = articles[i].querySelector("a.overlayLink").href;
-        } catch (e) {}
-        
-        try {
-            bott = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');//bottom list
-            botth = articles[i].querySelector("a.overlayLink").href;
-        } catch (e) {}
-        
-        bAdd.dataset.title = left || cent || bott;
-        bAdd.dataset.href = lefth || centh || botth;
-        
-        bAdd.addEventListener("click", (event) => {
-            var title = event.target.dataset.title;
-            var href = event.target.dataset.href;
-
-            //event.target.className = "in_list";
-            browser.storage.local.set({[title]: href});
+function updatePage(articles) {
+    if (articles.length > 1) {
+        for (var i = 0; i < articles.length; i++) {
             
-            displayFloatButton();
-        });
-        
-/*ON DELETE
-        var home = undefined;
-        var el = articles[i];//?????
-
-        while (home == undefined) {
-            if (el.parentNode.classList.contains("latestEntries")) { //left main list
-                home = "latestEntries";
-            } else if (el.parentNode.classList.contains("pickedEntries")) { //center main part of page
-                home = "pickedEntries";
-            } else if (el.parentNode.classList.contains("pickedEntriesBottom")  && el.parentNode) { //bottom list
-                home = "pickedEntriesBottom";
+            if (articles[i].querySelector("add_to_quick_list") || articles[i].querySelector("in_list")) {
+                continue;
             }
 
-            el = el.parentNode;
-        }
+            var bAdd = document.createElement("div");
+            var left = undefined;
+            var cent = undefined;
+            var bott = undefined;
+            var lefth = undefined;
+            var centh = undefined;
+            var botth = undefined;
 
-        switch (home) {
-            case "latestEntries":
-                bAdd.dataset.href = articles[i].querySelector(".desktop .entryTitle a").href;
-                bAdd.dataset.title = articles[i].querySelector(".desktop .entryTitle a").innerHTML;
-                break;
-            case "pickedEntries":
-                bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
-                bAdd.dataset.title = articles[i].querySelector("h2.entryTitle").innerHTML;
-                break;
-            case "pickedEntriesBottom":
-                bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
-                bAdd.dataset.title = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');
-                break;
-        }
+            bAdd.classList.add("add_to_quick_list");
 
-        bAdd.dataset.homeType = home;
-!!!!!*/
-        
-        articles[i].appendChild(bAdd);
+            bAdd.dataset.i = i;
+
+            try {
+                left = articles[i].querySelector(".desktop .entryTitle a").innerHTML;//left main list
+                lefth = articles[i].querySelector(".desktop .entryTitle a").href;
+            } catch (e) {}
+
+            try {
+                cent = articles[i].querySelector("h2.entryTitle").innerHTML;//center main part of page
+                centh = articles[i].querySelector("a.overlayLink").href;
+            } catch (e) {}
+
+            try {
+                bott = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');//bottom list
+                botth = articles[i].querySelector("a.overlayLink").href;
+            } catch (e) {}
+
+            bAdd.dataset.title = left || cent || bott;
+            bAdd.dataset.href = lefth || centh || botth;
+
+            bAdd.addEventListener("click", (event) => {
+                var title = event.target.dataset.title;
+                var href = event.target.dataset.href;
+
+                event.target.className = 'in_list';
+
+                //event.target.className = "in_list";
+                browser.storage.local.set({[title]: href});
+
+                displayFloatButton();
+            });
+
+    /*ON DELETE
+            var home = undefined;
+            var el = articles[i];//?????
+
+            while (home == undefined) {
+                if (el.parentNode.classList.contains("latestEntries")) { //left main list
+                    home = "latestEntries";
+                } else if (el.parentNode.classList.contains("pickedEntries")) { //center main part of page
+                    home = "pickedEntries";
+                } else if (el.parentNode.classList.contains("pickedEntriesBottom")  && el.parentNode) { //bottom list
+                    home = "pickedEntriesBottom";
+                }
+
+                el = el.parentNode;
+            }
+
+            switch (home) {
+                case "latestEntries":
+                    bAdd.dataset.href = articles[i].querySelector(".desktop .entryTitle a").href;
+                    bAdd.dataset.title = articles[i].querySelector(".desktop .entryTitle a").innerHTML;
+                    break;
+                case "pickedEntries":
+                    bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
+                    bAdd.dataset.title = articles[i].querySelector("h2.entryTitle").innerHTML;
+                    break;
+                case "pickedEntriesBottom":
+                    bAdd.dataset.href = articles[i].querySelector("a.overlayLink").href;
+                    bAdd.dataset.title = articles[i].querySelector("h3.entryTitle").textContent.replace(/(^\s*)|(\s*)$/g, '');
+                    break;
+            }
+
+            bAdd.dataset.homeType = home;
+    !!!!!*/
+
+            articles[i].appendChild(bAdd);
+        }
     }
 }
 
@@ -171,6 +180,15 @@ function displayFloatButton() {
             
         }
         
-        console.log(res);
+        //console.log(res);
+    });
+}
+
+var more_button = document.querySelector('.action[data-action="home.more"]');
+if (more_button) {
+    more_button.addEventListener('click', (e) => {
+        var entries = document.body.querySelector('div.latestEntries.tab.active');
+        var art = entries.getElementsByTagName("article");
+        setTimeout(() => {updatePage(art);}, 1000);
     });
 }
